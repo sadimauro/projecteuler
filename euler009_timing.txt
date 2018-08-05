@@ -1,0 +1,4 @@
+./euler009_v1.py: answer: 31875000
+Run time: 0.69486522674560546875 sec
+./euler009_v2.py: answer: 31875000
+Run time: 0.20794653892517089844 sec
