@@ -19,6 +19,9 @@ def parse_hands(line):
     tokens = line.split(sep=' ')
     return tokens[:5], tokens[5:]
 
+def max_diff(l):
+    return max(l) - min(l)
+
 class Card:
     def __init__(self, strin):
         try:
@@ -48,15 +51,6 @@ class Hand:
 
     def value(self):
         """Return int, kickers list"""
-        # hc = 1
-        # pair = 2
-        # 2 pair = 3
-        # 3oak = 4
-        # straight = 5
-        # flush = 6
-        # full house = 7
-        # 4oak = 8
-        # straight flush = 9
         
         d_by_val = {}
         d_by_suit = {}
@@ -64,30 +58,56 @@ class Hand:
             if card.val not in d_by_val:
                 d_by_val[card.val] = []
             d_by_val[card.val].append(card.suit)
-            if vard.suit not in d_by_suit:
+            if card.suit not in d_by_suit:
                 d_by_suit[card.suit] = []
             d_by_suit[card.suit].append(card.val)
         
+        d_by_val_keys = list(d_by_val.keys())
+        d_by_val_keys_sorted = sorted(d_by_val_keys, key=lambda x : (len(d_by_val[x]), x), reverse=True)
+        d_by_val_values_sorted = []
+        for key in d_by_val_keys_sorted:
+            d_by_val_values_sorted.append(d_by_val[key])
+
+        d_by_suit_keys = list(d_by_suit.keys())
+        d_by_suit_values = list(d_by_suit.values())
+
         ret_val = 0
         ret_kickers = []
+        
+        # straight flush
+        if len(d_by_suit_keys) == 1 and max_diff(d_by_suit_values[0]) == 4:
+            return 9, sorted(d_by_suit_values[0], reverse=True)
 
-        # flushes (straight and not)
-        if len(d_by_suit.keys()) == 1:
-            ret_val = 6
-            l = list(d_by_suit.values())[0]
-            if max(l) - min(l) == 4:
-                ret_val = 9
-            return ret_val, [max(l)]
+        # 4oak
+        elif len(d_by_val_values_sorted[0]) == 4:
+            return 8, d_by_val_keys_sorted
 
-        # 4oak and full house
-        if len(d_by_val.keys()) == 2:
-            longest_len = 0
-            longest_len_kicker = 0
-            for i in range(2):
-                longest_len = d_
-            
+        # full house
+        elif len(d_by_val_keys) == 2 and (len(d_by_val_values_sorted[0]) == 3) and (len(d_by_val_values_sorted[1]) == 2):
+            return 7, d_by_val_keys_sorted
+        
+        # flush
+        elif len(d_by_suit_keys) == 1:
+            return 6, sorted(d_by_suit_values[0], reverse=True)
 
+        # straight
+        elif len(d_by_val_keys) == 5 and max_diff(d_by_val_keys) == 4:
+            return 5, sorted(d_by_val_keys, reverse=True)
 
+        # 3oak
+        elif len(d_by_val_keys) == 3 and (len(d_by_val_values_sorted[0]) == 3):
+            return 4, d_by_val_keys_sorted
+
+        # 2 pair
+        elif len(d_by_val_keys) == 3 and (len(d_by_val_values_sorted[0]) == 2) and (len(d_by_val_values_sorted[1]) == 2):
+            return 3, d_by_val_keys_sorted
+        
+        # 1 pair
+        elif len(d_by_val_keys) == 4 and (len(d_by_val_values_sorted[0]) == 2):
+            return 2, d_by_val_keys_sorted
+
+        else:
+            return 1, d_by_val_keys_sorted
 
 
     def __lt__(self, other):
