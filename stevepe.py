@@ -298,6 +298,15 @@ def tupleToInt(tupIn):
         res += int(tupIn[i])
     return res
 
+def sortIntDigits(intIn):
+    """
+    >>> sortIntDigits(1423)
+    1234
+    """
+    a = list(str(intIn))
+    a.sort()
+    return tupleToInt(a)
+
 def isPentagonal(n):
     """
     Return True is n is pentagonal, i.e. if 
@@ -406,7 +415,7 @@ def getIntPermutations(n):
     int n, including n itself.
 
     e.g. if n = 123, return is {123, 132, 213, 231, 312, 321}.
-    
+
     >>> getIntPermutations(1)
     {1}
 
@@ -415,15 +424,35 @@ def getIntPermutations(n):
 
     >>> getIntPermutations(123)
     {321, 132, 231, 213, 312, 123}
+    
+    >>> a = list(getIntPermutations(122))
+    >>> a.sort()
+    >>> a
+    [122, 212, 221]
 
     >>> getIntPermutations(144)
     {144, 441, 414}
     """
-    ret = set()
-    iter = itertools.permutations(str(n))
-    for tup in iter:
-        ret.add(tupleToInt(tup))
-    return ret
+    ret_list = []
+    ints = (int(x) for x in str(n))
+    iter = itertools.permutations(ints)
+    ret_list = [tupleToInt(tup) for tup in iter]
+    #for tup in iter:
+    #    ret.add(tupleToInt(tup))
+    return ret_list
+
+def getIntPermutationsDeduped(n):
+    return set(getIntPermutations(n))
+
+def genIntPermutations(n):
+    """
+    Generate all of the permutations of int n, including n itself.
+
+    e.g. if n = 123, return is {123, 132, 213, 231, 312, 321}.
+    """
+    for tup in itertools.permutations(str(n)):
+        yield tupleToInt(tup)
+    return
 
 def getIntReverse(n):
     """
