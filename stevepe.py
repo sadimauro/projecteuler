@@ -425,6 +425,80 @@ def getIntPermutations(n):
         ret.add(tupleToInt(tup))
     return ret
 
+def getIntReverse(n):
+    """
+    Return the reverse of int n.
+
+    >>> getIntReverse(1234)
+    4321
+
+    >>> getIntReverse(0)
+    0
+
+    >>> getIntReverse(-7575)
+    -5757
+    """
+    neg = False
+    if n < 0:
+        neg = True
+        n *= -1
+
+    n_str = str(n)
+    n_str_rev = ''
+    
+    for i in range(len(n_str)):
+        n_str_rev += n_str[len(n_str)-i-1]
+    if neg:
+        n_str_rev = '-' + n_str_rev
+    return int(n_str_rev)
+
+def isIntPalindrome(n):
+    """
+    Return True if n is a palindrome.
+
+    >>> isIntPalindrome(1234)
+    False
+
+    >>> isIntPalindrome(12321)
+    True
+    """
+    return getIntReverse(n) == n
+
+def getDigitalSum(n):
+    """
+    Return the sum of the digits in n.
+
+    >>> getDigitalSum(1234)
+    10
+    """
+    tot = 0
+    while n > 0:
+        tot += n % 10
+        n = n // 10
+    return tot
+
+def numberOfDigits(n):
+    """
+    Return the number of digits in n.
+
+    >>> numberOfDigits(123)
+    3
+
+    >>> numberOfDigits(-4567)
+    4
+
+    >>> numberOfDigits(0)
+    1
+    """
+    if n == 0:
+        return 1
+    count = 0
+    n = abs(n)
+    while n > 0:
+        count += 1
+        n = n // 10
+    return count
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

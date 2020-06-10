@@ -1,0 +1,1 @@
+Solved with code that generated all putative plaintexts and then eyeballed the correc tone.  Istead, a good solution is to do frequency analysis on each of the three sets of ciphertexts (at three decimations), and assume that the most frequently-occurring character is the SPACE.  I didn this within ipython and it worked.  pw = 'exp'.
